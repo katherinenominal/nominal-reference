@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nominal Capabilities & Limitations - Complete Reference Guide</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #1a1a2e;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        .tabs {
+            display: flex;
+            background-color: #2c3e50;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: thin;
+        }
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            color: #ecf0f1;
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .tab:hover {
+            background-color: #34495e;
+        }
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #fff;
+        }
+        .content {
+            padding: 20px;
+            overflow-x: auto;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #34495e;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f0f0f0;
+        }
+        .status-yes {
+            color: #27ae60;
+            font-weight: 600;
+        }
+        .status-no {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        .status-partial {
+            color: #f39c12;
+            font-weight: 600;
+        }
+        .status-planned {
+            color: #3498db;
+            font-weight: 600;
+        }
+        .status-custom {
+            color: #9b59b6;
+            font-weight: 600;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        h3 {
+            color: #34495e;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .note {
+            background-color: #ecf0f1;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border-left: 4px solid #3498db;
+        }
+        .warning {
+            background-color: #fff3cd;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border-left: 4px solid #f39c12;
+        }
+        .critical {
+            background-color: #f8d7da;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border-left: 4px solid #e74c3c;
+        }
+        .success {
+            background-color: #d4edda;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border-left: 4px solid #27ae60;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        .badge-new {
+            background-color: #3498db;
+            color: white;
+        }
+        .badge-beta {
+            background-color: #f39c12;
+            color: white;
+        }
+        .badge-deprecated {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .search-box {
+            margin-bottom: 15px;
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Nominal Platform Reference Guide</h1>
+            <p>Complete capabilities, limitations, and implementation reference for Sales, SE, and AM teams</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('quickref', this)">Quick Reference</button>
+            <button class="tab" onclick="showTab('integrations', this)">ERP Integrations</button>
+            <button class="tab" onclick="showTab('features', this)">Feature Details</button>
+            <button class="tab" onclick="showTab('limitations', this)">Limitations & Workarounds</button>
+            <button class="tab" onclick="showTab('pricing', this)">Pricing & Packaging</button>
+            <button class="tab" onclick="showTab('security', this)">Security & Compliance</button>
+            <button class="tab" onclick="showTab('onboarding', this)">Implementation Timeline</button>
+            <button class="tab" onclick="showTab('usecases', this)">Customer Use Cases</button>
+            <button class="tab" onclick="showTab('competition', this)">Competitive Positioning</button>
+            <button class="tab" onclick="showTab('objections', this)">Common Objections</button>
+            <button class="tab" onclick="showTab('roadmap', this)">Product Roadmap</button>
+            <button class="tab" onclick="showTab('support', this)">Support & Resources</button>
+        </div>
+        
+        <div class="content">
+            <!-- Tab 1: Quick Reference -->
+            <div id="quickref" class="tab-content active">
+                <h2>Quick Reference Guide</h2>
+                
+                <div class="note">
+                    <strong>Elevator Pitch:</strong> Nominal is an AI-powered financial consolidation platform that reduces month-end close time by up to 70% through automated intercompany matching, intelligent variance analysis, and seamless multi-entity consolidation.
+                </div>
+
+                <h3>Key Selling Points</h3>
+                <table>
+                    <tr>
+                        <th>Value Proposition</th>
+                        <th>Proof Point</th>
+                        <th>Ideal Customer Profile</th>
+                    </tr>
+                    <tr>
+                        <td><strong>70% Reduction in Close Time</strong></td>
+                        <td>AI automates ~70% of flux analysis and matching</td>
+                        <td>Multi-entity organizations (5+ entities)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>No ERP Migration Required</strong></td>
+                        <td>Shadow ledger preserves existing systems</td>
+                        <td>Companies with multiple ERPs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SOC 1 & SOC 2 Certified</strong></td>
+                        <td>Enterprise-grade security</td>
+                        <td>Public companies & regulated industries</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4-9 Week Implementation</strong></td>
+                        <td>Faster than traditional solutions</td>
+                        <td>Companies needing quick ROI</td>
+                    </tr>
+                </table>
+
+                <h3>Quick Compatibility Check</h3>
+                <table>
+                    <tr>
+                        <th>Question</th>
+                        <th>Yes = Good Fit</th>
+                        <th>No = Challenge</th>
+                    </tr>
+                    <tr>
+                        <td>Do they have 5+ legal entities?</td>
+                        <td class="status-yes">✓ Prime candidate</td>
+                        <td class="status-no">May be too small</td>
+                    </tr>
+                    <tr>
+                        <td>Using NetSuite, QBO, or Sage Intacct?</td>
+                        <td class="status-yes">✓ Easy integration</td>
+                        <td class="status-partial">Custom work needed</td>
+                    </tr>
+                    <tr>
+                        <td>Need budgeting/forecasting?</td>
+                        <td class="status-no">Not our focus</td>
+                        <td class="status-yes">✓ Good fit</td>
+                    </tr>
+                    <tr>
+                        <td>Want to replace their ERP?</td>
+                        <td class="status-no">We complement ERPs</td>
+                        <td class="status-yes">✓ Good fit</td>
+                    </tr>
+                    <tr>
+                        <td>Complex intercompany transactions?</td>
+                        <td class="status-yes">✓ Major value prop</td>
+                        <td class="status-partial">Less differentiation</td>
+                    </tr>
+                </table>
+
+                <h3>Pricing Guidance</h3>
+                <table>
+                    <tr>
+                        <th>Company Size</th>
+                        <th>Typical ARR Range</th>
+                        <th>Key Factors</th>
+                    </tr>
+                    <tr>
+                        <td>5-10 entities</td>
+                        <td>$50K - $100K</td>
+                        <td>Number of users, transaction volume</td>
+                    </tr>
+                    <tr>
+                        <td>11-25 entities</td>
+                        <td>$100K - $250K</td>
+                        <td>Complexity, number of ERPs</td>
+                    </tr>
+                    <tr>
+                        <td>26+ entities</td>
+                        <td>$250K+</td>
+                        <td>Custom pricing based on requirements</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tab 2: ERP Integrations -->
+            <div id="integrations" class="tab-content">
+                <h2>ERP Integration Details</h2>
+                
+                <div class="warning">
+                    <strong>Critical Note:</strong> Only Sage Intacct currently supports full journal entry write-back. All other ERPs are read-only into our shadow ledger.
+                </div>
+
+                <h3>Supported ERPs - Detailed Matrix</h3>
+                <table>
+                    <tr>
+                        <th>ERP System</th>
+                        <th>Integration Method</th>
+                        <th>Setup Time</th>
+                        <th>Write-back</th>
+                        <th>Known Limitations</th>
+                        <th>Customer Examples</th>
+                    </tr>
+                    <tr>
+                        <td><strong>NetSuite</strong></td>
+                        <td>Native API</td>
+                        <td>1-2 weeks</td>
+                        <td class="status-partial">Roadmap</td>
+                        <td>Custom fields may need mapping</td>
+                        <td>Multiple live customers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>QuickBooks Online</strong></td>
+                        <td>Native API</td>
+                        <td>< 1 week</td>
+                        <td class="status-no">No</td>
+                        <td>Class tracking limitations</td>
+                        <td>Quickplay, others</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sage Intacct</strong></td>
+                        <td>Native API</td>
+                        <td>1-2 weeks</td>
+                        <td class="status-yes">Full</td>
+                        <td>None significant</td>
+                        <td>GSPP, others</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SAP (S/4HANA, ECC)</strong></td>
+                        <td>Custom/Agent</td>
+                        <td>4-6 weeks</td>
+                        <td class="status-no">No</td>
+                        <td>Complex data models</td>
+                        <td>In development</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Oracle Fusion</strong></td>
+                        <td>API/Agent</td>
+                        <td>4-6 weeks</td>
+                        <td class="status-partial">Scoped</td>
+                        <td>Requires IT involvement</td>
+                        <td>Pipeline opportunities</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Microsoft Dynamics BC</strong></td>
+                        <td>API (Beta)</td>
+                        <td>2-3 weeks</td>
+                        <td class="status-partial">Scoped</td>
+                        <td>Beta status</td>
+                        <td>Pilot customers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Xero</strong></td>
+                        <td>Native API</td>
+                        <td>< 1 week</td>
+                        <td class="status-no">No</td>
+                        <td>Limited dimensions</td>
+                        <td>APAC customers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Workday Financial</strong></td>
+                        <td>Report Builder</td>
+                        <td>3-4 weeks</td>
+                        <td class="status-no">No</td>
+                        <td>Requires custom reports</td>
+                        <td>TCC, others</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SQL Server (Direct)</strong></td>
+                        <td>Database</td>
+                        <td>2-3 weeks</td>
+                        <td class="status-no">No</td>
+                        <td>Read-only access</td>
+                        <td><span class="badge badge-new">NEW</span> Q4 2025</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Excel/CSV Upload</strong></td>
+                        <td>Manual File</td>
+                        <td>Immediate</td>
+                        <td>N/A</td>
+                        <td>Manual process</td>
+                        <td>All customers as backup</td>
+                    </tr>
+                </table>
+
+                <h3>Integration Requirements by Type</h3>
+                <table>
+                    <tr>
+                        <th>Integration Type</th>
+                        <th>Customer Requirements</th>
+                        <th>Nominal Handles</th>
+                        <th>Typical Issues</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Cloud API</strong></td>
+                        <td>Admin credentials, API access</td>
+                        <td>All technical setup</td>
+                        <td>Permission scoping</td>
+                    </tr>
+                    <tr>
+                        <td><strong>On-Premise (Agent)</strong></td>
+                        <td>IT team involvement, server access</td>
+                        <td>Agent installation guide</td>
+                        <td>Firewall rules, IT delays</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Database Direct</strong></td>
+                        <td>Read-only DB user, IP whitelist</td>
+                        <td>Query optimization</td>
+                        <td>Network security policies</td>
+                    </tr>
+                    <tr>
+                        <td><strong>File Upload</strong></td>
+                        <td>Formatted files (TB, CoA)</td>
+                        <td>Template provision</td>
+                        <td>Format inconsistencies</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tab 3: Feature Details -->
+            <div id="features" class="tab-content">
+                <h2>Detailed Feature Capabilities</h2>
+
+                <h3>Core Consolidation Features</h3>
+                <table>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Description</th>
+                        <th>Automation Level</th>
+                        <th>Configuration Required</th>
+                        <th>Time to Value</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Multi-Entity Consolidation</strong></td>
+                        <td>Automated rollup of all entities</td>
+                        <td class="status-yes">95%</td>
+                        <td>Initial mapping setup</td>
+                        <td>Week 2-3</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Intercompany Eliminations</strong></td>
+                        <td>4 methods: Manual, Clearing Groups, Matching, AI Agent</td>
+                        <td class="status-partial">70-90%</td>
+                        <td>Define elimination rules</td>
+                        <td>Week 3-4</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Currency Translation (CTA)</strong></td>
+                        <td>Multi-currency with current/historical/average rates</td>
+                        <td class="status-yes">100%</td>
+                        <td>Rate type per account</td>
+                        <td>Week 2</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Minority Interest (NCI)</strong></td>
+                        <td>Partial ownership calculations</td>
+                        <td class="status-yes">100%</td>
+                        <td>Ownership percentages</td>
+                        <td>Week 2</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Journal Entries</strong></td>
+                        <td>Manual and automated entries</td>
+                        <td class="status-partial">Varies</td>
+                        <td>Approval workflows</td>
+                        <td>Immediate</td>
+                    </tr>
+                </table>
+
+                <h3>Reporting Capabilities</h3>
+                <table>
+                    <tr>
+                        <th>Report Type</th>
+                        <th>Standard</th>
+                        <th>Customizable</th>
+                        <th>Export Formats</th>
+                        <th>Drill-Down</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Balance Sheet</strong></td>
+                        <td class="status-yes">Yes</td>
+                        <td class="status-yes">Fully</td>
+                        <td>Excel, PDF, CSV</td>
+                        <td>To transaction level</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Income Statement</strong></td>
+                        <td class="status-yes">Yes</td>
+                        <td class="status-yes">Fully</td>
+                        <td>Excel, PDF, CSV</td>
+                        <td>To transaction level</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cash Flow</strong></td>
+                        <td class="status-partial">On request</td>
+                        <td class="status-yes">Yes</td>
+                        <td>Excel, PDF, CSV</td>
+                        <td>Limited</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Custom Reports</strong></td>
+                        <td>Report Builder</td>
+                        <td class="status-yes">Fully</td>
+                        <td>Excel, PDF, CSV</td>
+                        <td>Configurable</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Executive Dashboard</strong></td>
+                        <td class="status-yes">Yes</td>
+                        <td class="status-partial">Limited</td>
+                        <td>Screen only</td>
+                        <td>To reports</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Flux Analysis</strong></td>
+                        <td class="status-yes">Yes</td>
+                        <td class="status-no">No</td>
+                        <td>PDF, Screen</td>
+                        <td>To GL detail</td>
+                    </tr>
+                </table>
+
+                <h3>AI & Automation Features</h3>
+                <table>
+                    <tr>
+                        <th>Feature</th>
+                        <th>AI Coverage</th>
+                        <th>Accuracy</th>
+                        <th>Learning Curve</th>
+                        <th>ROI Timeline</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Flux Analysis</strong></td>
+                        <td>~70% automated insights</td>
+                        <td>High</td>
+                        <td>Immediate</td>
+                        <td>Month 1</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IC Matching Agent</strong></td>
+                        <td>80-95% match rate</td>
+                        <td>Very High</td>
+                        <td>2-3 months</td>
+                        <td>Month 2</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Elimination Agent</strong></td>
+                        <td>Customer-specific</td>
+                        <td>High</td>
+                        <td>1-2 months</td>
+                        <td>Month 3</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anomaly Detection</strong></td>
+                        <td><span class="badge badge-new">Coming Q3</span></td>
+                        <td>TBD</td>
+                        <td>TBD</td>
+                        <td>TBD</td>
+                    </tr>
+                </table>
+
+                <h3>Close Management Features</h3>
+                <table>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Status</th>
+                        <th>Key Benefit</th>
+                        <th>Limitations</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Task Management</strong></td>
+                        <td class="status-yes">Active</td>
+                        <td>Automated workflows</td>
+                        <td>No Gantt charts</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Segregation of Duties</strong></td>
+                        <td class="status-yes">Active</td>
+                        <td>Compliance support</td>
+                        <td>Basic roles only</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Audit Trail</strong></td>
+                        <td class="status-yes">Active</td>
+                        <td>Complete history</td>
+                        <td>No custom reports</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Notifications</strong></td>
+                        <td class="status-yes">Active</td>
+                        <td>Email + in-app</td>
+                        <td>No SMS/Slack yet</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Period Locking</strong></td>
+                        <td class="status-yes">Active</td>
+                        <td>Prevent changes</td>
+                        <td>Hard/soft lock only</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tab 4: Limitations -->
+            <div id="limitations" class="tab-content">
+                <h2>Limitations & Workarounds</h2>
+
+                <div class="critical">
+                    <strong>Critical Limitations to Discuss Early:</strong>
+                    <ul style="margin: 5px 0;">
+                        <li>No budgeting or forecasting capabilities</li>
+                        <li>Journal entry write-back only for Sage Intacct</li>
+                        <li>No native tax compliance modules (GST/VAT)</li>
+                        <li>Limited BI tool integration (custom work required)</li>
+                    </ul>
+                </div>
+
+                <h3>Feature Limitations & Workarounds</h3>
+                <table>
+                    <tr>
+                        <th>Limitation</th>
+                        <th>Impact</th>
+                        <th>Which Customers Care</th>
+                        <th>Workaround</th>
+                        <th>Roadmap Status</th>
+                    </tr>
+                    <tr>
+                        <td><strong>No Budgeting/Forecasting</strong></td>
+                        <td class="status-no">High</td>
+                        <td>FP&A focused teams</td>
+                        <td>Partner with Adaptive, Anaplan</td>
+                        <td>Not planned</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Limited Write-back</strong></td>
+                        <td class="status-partial">Medium</td>
+                        <td>NetSuite, SAP users</td>
+                        <td>Export journal entries</td>
+                        <td>NetSuite Q1 2026</td>
+                    </tr>
+                    <tr>
+                        <td><strong>No Tax Modules</strong></td>
+                        <td class="status-partial">Medium</td>
+                        <td>International companies</td>
+                        <td>Integrate with tax software</td>
+                        <td>Not planned</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Basic User Permissions</strong></td>
+                        <td class="status-partial">Low</td>
+                        <td>Large enterprises</td>
+                        <td>Use entity-level permissions</td>
+                        <td>Enhanced Q4 2025</td>
+                    </tr>
+                    <tr>
+                        <td><strong>No Mobile App</strong></td>
+                        <td class="status-partial">Low</td>
+                        <td>Executives</td>
+                        <td>Mobile browser works</td>
+                        <td>Not planned</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Limited Workflow Automation</strong></td>
+                        <td class="status-partial">Medium</td>
+                        <td>Complex processes</td>
+                        <td>Use task dependencies</td>
+                        <td>Q3 2025 enhancement</td>
+                    </tr>
+                    <tr>
+                        <td><strong>No Data Warehouse Push</strong></td>
+                        <td class="status-partial">Low</td>
+                        <td>BI-heavy organizations</td>
+                        <td>API export available</td>
+                        <td>Evaluating</td>
+                    </tr>
+                </table>
+
+                <h3>Technical Limitations</h3>
+                <table>
+                    <tr>
+                        <th>Area</th>
+                        <th>Limitation</th>
+                        <th>Why It Matters</th>
+                        <th>Alternative Solution</th>
+                    </tr>
+                    <tr>
+                        <td><strong>API Rate Limits</strong></td>
+                        <td>Standard SaaS limits apply</td>
+                        <td>Large data volumes</td>
+                        <td>Batch processing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>File Size Limits</strong></td>
+                        <td>100MB for uploads</td>
+                        <td>Large Excel files</td>
+                        <td>Split files or compress</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Historical Data</strong></td>
+                        <td>2 years standard</td>
+                        <td>Audit requirements</td>
+                        <td>Archive externally</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Custom Fields</strong></td>
+                        <td>Limited support</td>
+                        <td>Complex ERPs</td>
+                        <td>Map to dimensions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Real-time Sync</strong></td>
+                        <td>Batch updates only</td>
+                        <td>Day-traders</td>
+                        <td>Manual refresh available</td>
+                    </tr>
+                </table>
+
+                <h3>Common Objection Handlers</h3>
+                <table>
+                    <tr>
+                        <th>Objection</th>
+                        <th>Response</th>
+                        <th>Proof Points</th>
+                    </tr>
+                    <tr>
+                        <td>"We need budgeting"</td>
+                        <td>We integrate with best-in-class FP&A tools</td>
+                        <td>Adaptive Planning partnership</td>
+                    </tr>
+                    <tr>
+                        <td>"No write-back to NetSuite"</td>
+                        <td>On roadmap for Q1 2026, export available now</td>
+                        <td>Sage Intacct already live</td>
+                    </tr>
+                    <tr>
+                        <td>"Seems expensive"</td>
+                        <td>ROI in 3-6 months through time savings</td>
+                        <td>70% reduction in close time</td>
+                    </tr>
+                    <tr>
+                        <td>"We're too complex"</td>
+                        <td>We handle Fortune 500 complexity</td>
+                        <td>100+ entity customers</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tab 5: Pricing & Packaging -->
+            <div id="pricing" class="tab-content">
+                <h2>Pricing & Packaging Guide</h2>
+
+                <div class="warning">
+                    <strong>Note:</strong> Pricing is indicative and subject to approval. Always confirm with leadership for deals over $100K ARR.
+                </div>
+
+                <h3>Pricing Model Components</h3>
+                <table>
+                    <tr>
+                        <th>Component</th>
+                        <th>Pricing Driver</th>
+                        <th>Typical Range</th>
+                        <th>Notes</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Platform Fee</strong></td>
+                        <td>Number of entities</td>
+                        <td>$2K-5K per entity/year</td>
+                        <td>Volume discounts apply</td>
+                    </tr>
+                    <tr>
+                        <td><strong>User Licenses</strong></td>
+                        <td>Named users</td>
+                        <td>$150-300/user/month</td>
+                        <td>Role-based pricing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Transaction Volume</strong></td>
+                        <td>Monthly transactions</td>
+                        <td>Included up to 100K/month</td>
+                        <td>Overage fees apply</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Features</strong></td>
+                        <td>Usage-based</td>
+                        <td>Included in Enterprise</td>
+                        <td>Separate pricing for SMB</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Implementation</strong></td>
+                        <td>Complexity</td>
+                        <td>$15K-50K one-time</td>
+                        <td>Can be waived for 3-year deals</td>
+                    </tr>
+                </table>
+
+                <h3>Package Tiers</h3>
+                <table>
+                    <tr>
+                        <th>Tier</th>
+                        <th>Target Customer</th>
+                        <th>Included Features</th>
+                        <th>Typical ARR</th>
+                        <th>Contract Terms</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Starter</strong></td>
+                        <td>5-10 entities</td>
+                        <td>Core consolidation, 5 users</td>
+                        <td>$50K-75K</td>
+                        <td>Annual</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Professional</strong></td>
+                        <td>11-25 entities</td>
+                        <td>+ AI features, 15 users</td>
+                        <td>$75K-150K</td>
+                        <td>Annual</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Enterprise</strong></td>
+                        <td>26-50 entities</td>
+                        <td>+ Advanced automation, 30 users</td>
+                        <td>$150K-300K</td>
+                        <td>Multi-year preferred</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Enterprise Plus</strong></td>
+                        <td>50+ entities</td>
+                        <td>Full platform, unlimited users</td>
+                        <td>$300K+</td>
+                        <td>3-year minimum</td>
+                    </tr>
+                </table>
+
+                <h3>Discounting Guidelines</h3>
+                <table>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Max Discount</th>
+                        <th>Approval Required</th>
+                        <th>Conditions</th>
+                    </tr>
+                    <tr>
+                        <td>3-year commitment</td>
+                        <td>15%</td>
+                        <td>Sales Manager</td>
+                        <td>Paid annually</td>
+                    </tr>
+                    <tr>
+                        <td>Competitive situation</td>
+                        <td>20%</td>
+                        <td>VP Sales</td>
+                        <td>Proof required</td>
+                    </tr>
+                    <tr>
+                        <td>Logo/Reference</td>
+                        <td>25%</td>
+                        <td>CEO</td>
+                        <td>Case study rights</td>
+                    </tr>
+                    <tr>
+                        <td>Non-profit</td>
+                        <td>30%</td>
+                        <td>CEO</td>
+                        <td>501(c)(3) verification</td>
+                    </tr>
+                    <tr>
+                        <td>Pilot/POC</td>
+                        <td>50% for 3 months</td>
+                        <td>VP Sales</td>
+                        <td>Conversion commitment</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tab 6: Security & Compliance -->
+            <div id="security" class="tab-content">
+                <h2>Security & Compliance</h2>
+
+                <div class="success">
+                    <strong>Key Certifications:</strong> SOC 1 Type II, SOC 2 Type II certified. Annual penetration testing by third-party firms.
+                </div>
+
+                <h3>Security Features</h3>
+                <table>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Details</th>
+                        <th>Compliance Standard</th>
+                        <th>Customer Control</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Encryption</strong></td>
+                        <td>AES-256 at rest, TLS 1.3 in transit</td>
+                        <td>SOC 2, ISO 27001</td>
+                        <td>Always on</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Access Control</strong></td>
+                        <td>SAML SSO, MFA support</td>
+                        <td>SOC 2</td>
+                        <td>Customer configured</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Audit Logging</strong></td>
+                        <td>Complete activity trail</td>
+                        <td>SOC 1</td>
+                        <td>Read-only access</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Residency</strong></td>
+                        <td>US-East primary</td>
+                        <td>GDPR option</td>
+                        <td>EU hosting available</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Backup & Recovery</strong></td>
+                        <td>Daily backups, 30-day retention</td>
+                        <td>SOC 2</td>
+                        <td>Restore requests</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Penetration Testing</strong></td>
+                        <td>Annual third-party testing</td>
+                        <td>Industry standard</td>
+                        <td>Reports available</td>
+                    </tr>
+                </table>
+
+                <h3>Compliance & Certifications</h3>
+                <table>
+                    <tr>
+                        <th>Certification</th>
+                        <th>Status</th>
+                        <th>Renewal</th>
+                        <th>Auditor</th>
+                    </tr>
+                    <tr>
+                        <td><strong>SOC 1 Type II</strong></td>
+                        <td class="status-yes">Active</td>
+                        <td>Annual</td>
+                        <td>Independent CPA</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SOC 2 Type II</strong></td>
+                        <td class="status-yes">Active</td>
+                        <td>Annual</td>
+                        <td>Independent CPA</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ISO 27001</strong></td>
+                        <td class="status-planned">Roadmap</td>
+                        <td>TBD</td>
+                        <td>TBD</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GDPR Compliant</strong></td>
+                        <td class="status-yes">Yes</td>
+                        <td>Ongoing</td>
+                        <td>Internal + Legal</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CCPA Compliant</strong></td>
+                        <td class="status-yes">Yes</td>
+                        <td>Ongoing</td>
+                        <td>Internal + Legal</td>
+                    </tr>
+                </table>
+
+                <h3>Data Handling & Privacy</h3>
+                <table>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Policy</th>
+                        <th>Customer Rights</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Ownership</strong></td>
+                        <td>Customer owns all data</td>
+                        <td>Export anytime</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Retention</strong></td>
+                        <td>Duration of contract + 90 days</td>
+                        <td>Deletion requests honored</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Third-party Access</strong></td>
+                        <td>No sharing without consent</td>
+                        <td>Full transparency</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Training</strong></td>
+                        <td>No customer data used for ML training</td>
+                        <td>Opt-in only</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tab 7: Implementation Timeline -->
+            <div id="onboarding" class="tab-content">
+                <h2>Implementation Timeline & Process</h2>
+
+                <h3>Standard Implementation Timeline</h3>
+                <table>
+                    <tr>
+                        <th>Week</th>
+                        <th>Phase</th>
+                        <th>Activities</th>
+                        <th>Customer Requirements</th>
+                        <th>Deliverables</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Week 0</strong></td>
+                        <td>Pre-Kickoff</td>
+                        <td>Contract signing, team assignment</td>
+                        <td>Identify stakeholders</td>
+                        <td>Project team roster</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Week 1</strong></td>
+                        <td>Kickoff & Scoping</td>
+                        <td>Requirements gathering, timeline review</td>
+                        <td>All stakeholders attend</td>
+                        <td>Project plan</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Weeks 1-2</strong></td>
+                        <td>Integration Setup</td>
+                        <td>ERP connections, data validation</td>
+                        <td>IT support, credentials</td>
+                        <td>Live data sync</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Weeks 2-3</strong></td>
+                        <td>Mapping & Configuration</td>
+                        <td>CoA mapping, hierarchy setup</td>
+                        <td>Mapping files, org chart</td>
+                        <td>Configured platform</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Weeks 3-4</strong></td>
+                        <td>Reports & Eliminations</td>
+                        <td>Report building, elimination rules</td>
+                        <td>Sample reports, elim logic</td>
+                        <td>Working reports</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Week 4</strong></td>
+                        <td>Testing & Training</td>
+                        <td>UAT, user training</td>
+                        <td>User participation</td>
+                        <td>Trained users</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Week 5</strong></td>
+                        <td>Go-Live</td>
+                        <td>Production cutover</td>
+                        <td>Final sign-off</td>
+                        <td>Live system</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Weeks 6-8</strong></td>
+                        <td>Hypercare</td>
+                        <td>Close support, optimization</td>
+                        <td>Feedback</td>
+                        <td>Optimized system</td>
+                    </tr>
+                </table>
+
+                <h3>Required Customer Documents</h3>
+                <table>
+                    <tr>
+                        <th>Document</th>
+                        <th>Purpose</th>
+                        <th>When Needed</th>
+                        <th>Format</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Trial Balances</strong></td>
+                        <td>Data validation</td>
+                        <td>Week 1</td>
+                        <td>Excel/CSV</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Org Structure</strong></td>
+                        <td>Entity hierarchy</td>
+                        <td>Week 1</td>
+                        <td>Any format</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Chart of Accounts</strong></td>
+                        <td>Mapping setup</td>
+                        <td>Week 2</td>
+                        <td>Excel/CSV</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Consolidation Logic</strong></td>
+                        <td>Mapping rules</td>
+                        <td>Week 2</td>
+                        <td>Excel/Document</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sample Reports</strong></td>
+                        <td>Report templates</td>
+                        <td>Week 3</td>
+                        <td>Any format</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Elimination Details</strong></td>
+                        <td>IC elimination rules</td>
+                        <td>Week 3</td>
+                        <td>Excel/Document</td>
+                    </tr>
+                </table>
+
+                <h3>Common Implementation Challenges</h3>
+                <table>
+                    <tr>
+                        <th>Challenge</th>
+                        <th>Frequency</th>
+                        <th>Impact</th>
+                        <th>Mitigation</th>
+                    </tr>
+                    <tr>
+                        <td>IT delays for access</td>
+                        <td class="status-no">High</td>
+                        <td>1-2 week delay</td>
+                        <td>Early IT engagement</td>
+                    </tr>
+                    <tr>
+                        <td>Inconsistent CoA</td>
+                        <td class="status-partial">Medium</td>
+                        <td>Mapping complexity</td>
+                        <td>Parent CoA approach</td>
+                    </tr>
+                    <tr>
+                        <td>Missing documentation</td>
+                        <td class="status-partial">Medium</td>
+                        <td>Requirements gaps</td>
+                        <td>Discovery sessions</td>
+                    </tr>
+                    <tr>
+                        <td>Change in scope</td>
+                        <td class="status-partial">Medium</td>
+                        <td>Timeline impact</td>
+                        <td>Change control process</td>
+                    </tr>
+                    <tr>
+                        <td>User adoption</td>
+                        <td class="status-partial">Low</td>
+                        <td>Slow ramp</td>
+                        <td>Extra training</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tab 8: Use Cases -->
+            <div id="usecases" class="tab-content">
+                <h2>Customer Use Cases & Success Stories</h2>
+
+                <h3>Use Cases by Industry</h3>
+                <table>
+                    <tr>
+                        <th>Industry</th>
+                        <th>Common Challenges</th>
+                        <th>Nominal Solution</th>
+                        <th>Success Metrics</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Software/SaaS</strong></td>
+                        <td>Multiple entities, complex revenue recognition</td>
+                        <td>Automated consolidation, custom reports</td>
+                        <td>Close reduced from 15 to 5 days</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Manufacturing</strong></td>
+                        <td>Intercompany inventory, multiple currencies</td>
+                        <td>IC matching, CTA automation</td>
+                        <td>90% reduction in IC reconciliation time</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Healthcare</strong></td>
+                        <td>Complex entity structures, compliance</td>
+                        <td>Audit trails, segregation of duties</td>
+                        <td>Full audit compliance achieved</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Retail/E-commerce</strong></td>
+                        <td>High transaction volume, multiple locations</td>
+                        <td>Scalable processing, location reporting</td>
+                        <td>Handle 10x transaction growth</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Private Equity</strong></td>
+                        <td>Portfolio company rollups</td>
+                        <td>Multi-level consolidation</td>
+                        <td>Portfolio reporting in hours vs days</td>
+                    </tr>
+                </table>
+
+                <h3>Customer Success Profiles</h3>
+                <table>
+                    <tr>
+                        <th>Customer Type</th>
+                        <th>Entity Count</th>
+                        <th>Key Requirements</th>
+                        <th>Results Achieved</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Quickplay (Gaming)</strong></td>
+                        <td>12 entities</td>
+                        <td>Multi-currency, QuickBooks consolidation</td>
+                        <td>Close time reduced by 60%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GSPP (Services)</strong></td>
+                        <td>8 entities</td>
+                        <td>Complex eliminations, Sage Intacct</td>
+                        <td>Automated 80% of eliminations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vizion Health</strong></td>
+                        <td>15 entities</td>
+                        <td>Compliance reporting, multi-state</td>
+                        <td>Audit prep time cut by 70%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LeanPay (FinTech)</strong></td>
+                        <td>20+ entities</td>
+                        <td>Real-time consolidation needs</td>
+                        <td>Daily consolidation capability</td>
+                    </tr>
+                </table>
+
+                <h3>ROI Calculator Inputs</h3>
+                <table>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Before Nominal</th>
+                        <th>After Nominal</th>
+                        <th>Annual Savings</th>
+                    </tr>
+                    <tr>
+                        <td>Close cycle time</td>
+                        <td>15 days average</td>
+                        <td>5 days average</td>
+                        <td>120 days/year</td>
+                    </tr>
+                    <tr>
+                        <td>FTE hours on consolidation</td>
+                        <td>200 hours/month</td>
+                        <td>60 hours/month</td>
+                        <td>1,680 hours/year</td>
+                    </tr>
+                    <tr>
+                        <td>Error rate</td>
+                        <td>5-10%</td>
+                        <td><1%</td>
+                        <td>Reduced audit costs</td>
+                    </tr>
+                    <tr>
+                        <td>IC reconciliation time</td>
+                        <td>40 hours/month</td>
+                        <td>4 hours/month</td>
+                        <td>432 hours/year</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tab 9: Competition -->
+            <div id="competition" class="tab-content">
+                <h2>Competitive Positioning</h2>
+
+                <h3>Competitive Landscape</h3>
+                <table>
+                    <tr>
+                        <th>Competitor</th>
+                        <th>Strengths</th>
+                        <th>Weaknesses</th>
+                        <th>When We Win</th>
+                        <th>When We Lose</th>
+                    </tr>
+                    <tr>
+                        <td><strong>BlackLine</strong></td>
+                        <td>Market leader, full suite</td>
+                        <td>Expensive, complex implementation</td>
+                        <td>AI differentiation, faster implementation</td>
+                        <td>Large enterprise, existing BlackLine</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FloQast</strong></td>
+                        <td>Close management focus</td>
+                        <td>Limited consolidation</td>
+                        <td>Multi-entity complexity</td>
+                        <td>Simple close management only</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OneStream</strong></td>
+                        <td>FP&A + consolidation</td>
+                        <td>Very expensive, long implementation</td>
+                        <td>Pure consolidation needs</td>
+                        <td>Need budgeting/forecasting</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Workiva</strong></td>
+                        <td>SEC reporting</td>
+                        <td>Not true consolidation</td>
+                        <td>Operational consolidation</td>
+                        <td>Public company reporting</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Excel/Manual</strong></td>
+                        <td>Familiar, flexible</td>
+                        <td>Error-prone, not scalable</td>
+                        <td>Growth, accuracy needs</td>
+                        <td>Very small, simple structure</td>
+                    </tr>
+                </table>
+
+                <h3>Differentiation Points</h3>
+                <table>
+                    <tr>
+                        <th>Differentiator</th>
+                        <th>Why It Matters</th>
+                        <th>Proof Points</th>
+                        <th>Best For</th>
+                    </tr>
+                    <tr>
+                        <td><strong>AI-Powered Automation</strong></td>
+                        <td>70% less manual work</td>
+                        <td>Flux analysis, IC matching</td>
+                        <td>Complex operations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Shadow Ledger Architecture</strong></td>
+                        <td>No ERP migration</td>
+                        <td>Keep existing systems</td>
+                        <td>Multi-ERP environments</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4-9 Week Implementation</strong></td>
+                        <td>Faster time to value</td>
+                        <td>vs 6-12 months others</td>
+                        <td>Urgent needs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Modern UX</strong></td>
+                        <td>Higher adoption</td>
+                        <td>No training required</td>
+                        <td>Non-technical users</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Transparent Pricing</strong></td>
+                        <td>Predictable costs</td>
+                        <td>No hidden fees</td>
+                        <td>Budget-conscious</td>
+                    </tr>
+                </table>
+
+                <h3>Competitive Battle Cards</h3>
+                <table>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Key Messages</th>
+                        <th>Proof Needed</th>
+                    </tr>
+                    <tr>
+                        <td><strong>vs BlackLine</strong></td>
+                        <td>Modern AI vs legacy rules engine, 75% less expensive</td>
+                        <td>ROI analysis, AI demo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>vs FloQast</strong></td>
+                        <td>True consolidation vs just close management</td>
+                        <td>Multi-entity demo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>vs Manual/Excel</strong></td>
+                        <td>Accuracy, audit trail, scalability</td>
+                        <td>Error statistics, growth plans</td>
+                    </tr>
+                    <tr>
+                        <td><strong>vs Do Nothing</strong></td>
+                        <td>Risk of errors, opportunity cost, competitive disadvantage</td>
+                        <td>Industry benchmarks</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Tab 10: Objection Handling -->
+            <div id="objections" class="tab-content">
+                <h2>Common Objections & Responses</h2>
+
+                <h3>Objection Handling Framework</h3>
+                <table>
+                    <tr>
+                        <th>Objection Category</th>
+                        <th>Common Objection</th>
+                        <th>Response Framework</th>
+                        <th>Supporting Evidence</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Functionality</strong></td>
+                        <td>"You don't have budgeting"</td>
+                        <td>Acknowledge + Position + Partner story</td>
+                        <td>We integrate with Adaptive Planning, focus allows us to excel at consolidation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Integration</strong></td>
+                        <td>"Our ERP isn't supported"</td>
+                        <td>Explore options + Timeline + Workaround</td>
+                        <td>Agent-based connection, 4-6 week timeline, CSV upload immediate</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Price</strong></td>
+                        <td>"Too expensive"</td>
+                        <td>ROI focus + Time savings + Error reduction</td>
+                        <td>3-6 month payback, 70% time reduction, <1% error rate</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Change Management</strong></td>
+                        <td>"Team won't adopt"</td>
+                        <td>Easy UX + Training included + Success stories</td>
+                        <td>No manual required, 2-hour training, 95% adoption rate</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Security</strong></td>
+                        <td>"Cloud concerns"</td>
+                        <td>Certifications + Architecture + References</td>
+                        <td>SOC 1/2, encrypted, Fortune 500 customers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Timing</strong></td>
+                        <td>"Not this year"</td>
+                        <td>Cost of delay + Competition + Pilot option</td>
+                        <td>$X savings per month delayed, competitors gaining efficiency</td>
+                    </tr>
+                </table>
+
+                <h3>Technical Objections</h3>
+                <table>
+                    <tr>
+                        <th>Objection</th>
+                        <th>Technical Response</th>
+                        <th>Follow-up Action</th>
+                    </tr>
+                    <tr>
+                        <td>"API limitations"</td>
+                        <td>Multiple connection methods, batch processing optimized</td>
+                        <td>Technical deep-dive with R&D</td>
+                    </tr>
+                    <tr>
+                        <td>"Data sovereignty"</td>
+                        <td>EU hosting available, data residency options</td>
+                        <td>Review data flow diagram</td>
+                    </tr>
+                    <tr>
+                        <td>"Real-time requirements"</td>
+                        <td>Configurable sync frequency, manual refresh available</td>
+                        <td>Discuss actual latency needs</td>
+                    </tr>
+                    <tr>
+                        <td>"Complex hierarchies"</td>
+                        <td>Unlimited levels, partial ownership, VIE support</td>
+                        <td>Demo with their structure</td>
+                    </tr>
+                    <tr>
+                        <td>"Custom fields"</td>
+                        <td>Dimension framework, flexible mapping</td>
+                        <td>Mapping workshop</td>
+                    </tr>
+                </table>
+
+                <h3>Decision Criteria Alignment</h3>
+                <table>
+                    <tr>
+                        <th>If They Value...</th>
+                        <th>Emphasize...</th>
+                        <th>Proof Points</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Speed</strong></td>
+                        <td>4-9 week implementation, immediate ROI</td>
+                        <td>Customer timeline examples</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Accuracy</strong></td>
+                        <td>AI validation, audit trails, SOC certified</td>
+                        <td>Error rate statistics</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Flexibility</strong></td>
+                        <td>No ERP lock-in, API access, custom reports</td>
+                        <td>Integration options</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Innovation</strong></td>
+                        <td>AI-first platform, continuous updates</td>
+                        <td>Product roadmap</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cost Control</strong></td>
+                        <td>Predictable pricing, included implementation</td>
+                        <script>
+  function showTab(tabId, el) {
+    document.querySelectorAll('.tab-content').forEach((content) => {
+      content.classList.remove('active');
+    });
+    document.querySelectorAll('.tab').forEach((tab) => {
+      tab.classList.remove('active');
+    });
+    document.getElementById(tabId).classList.add('active');
+    el.classList.add('active');
+  }
+</script>
